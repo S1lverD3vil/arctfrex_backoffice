@@ -1,0 +1,42 @@
+{
+  "name": "arctfrex-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@fontsource/roboto": "^5.0.14",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/material": "^5.16.7",
+    "@mui/x-charts": "^7.13.0",
+    "@mui/x-date-pickers": "^7.22.0",
+    "@tanstack/react-query": "^5.51.24",
+    "@uidotdev/usehooks": "^2.4.1",
+    "axios": "^1.7.4",
+    "formik": "^2.4.6",
+    "lodash": "^4.17.21",
+    "moment": "^2.30.1",
+    "next": "14.2.5",
+    "next-intl": "^3.26.2",
+    "notistack": "^3.0.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-use-websocket": "^4.11.1",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.9",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
+    "typescript": "^5"
+  }
+}
