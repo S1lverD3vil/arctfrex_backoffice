@@ -15,6 +15,7 @@ interface FormValues {
   customer_name: string;
   email: string;
   mobilephone: string;
+  referral_code: string;
 }
 
 // Validation schema using Yup
@@ -34,6 +35,7 @@ const initialValues: FormValues = {
   customer_name: "",
   email: "",
   mobilephone: "",
+  referral_code: "",
 };
 
 const CustomerRegisterForm = () => {
@@ -91,6 +93,7 @@ const CustomerRegisterForm = () => {
               id="customer_name"
               name="customer_name"
               label={t("customer_name")}
+              autoComplete="off"
               value={formik.values.customer_name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -111,6 +114,7 @@ const CustomerRegisterForm = () => {
               id="email"
               name="email"
               label={t("email")}
+              autoComplete="off"
               value={formik.values.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -125,9 +129,31 @@ const CustomerRegisterForm = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
+              id="referral_code"
+              name="referral_code"
+              label={t("referral_code")}
+              autoComplete="off"
+              value={formik.values.referral_code}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.referral_code &&
+                Boolean(formik.errors.referral_code)
+              }
+              helperText={
+                formik.touched.referral_code &&
+                Boolean(formik.errors.referral_code) &&
+                formik.errors.referral_code
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
               id="mobilephone"
               name="mobilephone"
               label={t("mobilephone")}
+              autoComplete="off"
               value={formik.values.mobilephone}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

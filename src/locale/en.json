@@ -178,7 +178,9 @@
     "all": "All",
     "lead": "Lead",
     "PresentasiRunningProfit": "Presentasi Running Profit",
-    "PresentasiAllProfit": "Presentasi All Profit"
+    "PresentasiAllProfit": "Presentasi All Profit",
+    "referral_code": "Referral Code",
+    "no_options_available": "No options available"
   },
   "Page": {
     "Index": {

@@ -8,7 +8,7 @@ export interface RegisterUserRequest {
   email: string;
   mobile_phone: string;
   password: string;
-  role_id_type: string;
+  role_id: string;
   superior_id: string;
   job_position: number;
 }
@@ -20,7 +20,7 @@ export interface RegisterUserResponse {
     customer_name: string;
     email: string;
     mobile_phone: string;
-    role_id_type: string;
+    role_id: string;
     superior_id: string;
     job_position: number;
     created_at: string;

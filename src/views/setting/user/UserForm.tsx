@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import {
@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import { useRegisterUserMutation } from "@/hooks/queries/backoffice/users/register";
 import { useTranslations } from "next-intl";
+import { useRolesAll } from "@/hooks/queries/backoffice/roles/all";
+import { useUsersRolesByRolesId } from "@/hooks/queries/backoffice/users/roles";
 
 // Define the type for form values
 interface FormValues {
@@ -22,7 +24,7 @@ interface FormValues {
   email: string;
   mobile_phone: string;
   password: string;
-  role_id_type: string;
+  role_id: string;
   superior_id: string;
   job_position: number;
 }
@@ -35,7 +37,7 @@ const validationSchema = Yup.object({
     .required("Email is required"),
   mobile_phone: Yup.string().required("Mobile Phone is required"),
   password: Yup.string().required("Password is required"),
-  role_id_type: Yup.string().required("Role ID Type is required"),
+  role_id: Yup.string().required("Role ID Type is required"),
   superior_id: Yup.string().required("Superior ID is required"),
   job_position: Yup.number().required("Job Position is required"),
 });
@@ -60,7 +62,7 @@ const UserForm = ({ onSuccess, onError }: UserFormProps) => {
       email: "",
       mobile_phone: "",
       password: "",
-      role_id_type: "",
+      role_id: "",
       superior_id: "",
       job_position: 0,
     },
@@ -73,6 +75,25 @@ const UserForm = ({ onSuccess, onError }: UserFormProps) => {
       }
     },
   });
+
+  const { data: rolesData } = useRolesAll();
+  const roles = rolesData?.data;
+
+  const selectedRole = roles?.find((r) => r.id === formik.values.role_id);
+
+  const { data: usersData } = useUsersRolesByRolesId({
+    role_id: String(selectedRole?.parent_role_id),
+    enabled: !!selectedRole?.parent_role_id,
+  });
+  const superiorUsers = usersData?.data;
+
+  const selectedSuperiorUser = superiorUsers?.find(
+    (s) => s.userid === formik.values.superior_id
+  );
+
+  useEffect(() => {
+    formik.setFieldValue("superior_id", "");
+  }, [formik.values.role_id]);
 
   return (
     <Box>
@@ -164,51 +185,70 @@ const UserForm = ({ onSuccess, onError }: UserFormProps) => {
         <FormControl
           fullWidth
           required
-          error={
-            formik.touched.role_id_type && Boolean(formik.errors.role_id_type)
-          }
+          error={formik.touched.role_id && Boolean(formik.errors.role_id)}
         >
-          <InputLabel id="role_id_type-label">{t("role_id_type")}</InputLabel>
+          <InputLabel id="role_id-label">{t("role_id")}</InputLabel>
           <Select
-            labelId="role_id_type-label"
-            id="role_id_type"
-            name="role_id_type"
-            value={formik.values.role_id_type}
+            labelId="role_id-label"
+            id="role_id"
+            name="role_id"
+            value={selectedRole?.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            label={t("role_id_type")}
+            label={t("role_id")}
           >
-            <MenuItem value="AdminBackoffice">AdminBackoffice</MenuItem>
-            <MenuItem value="SubIB">SubIB</MenuItem>
-            <MenuItem value="HeadMarketing">HeadMarketing</MenuItem>
-            <MenuItem value="TeamLeader">TeamLeader</MenuItem>
-            <MenuItem value="SalesManager">SalesManager</MenuItem>
+            {roles?.map((role) => (
+              <MenuItem key={role.id} value={role.id}>
+                {role.name}
+              </MenuItem>
+            ))}
           </Select>
-          {formik.touched.role_id_type && formik.errors.role_id_type && (
+          {formik.touched.role_id && formik.errors.role_id && (
             <Typography variant="caption" color="error">
-              {formik.errors.role_id_type}
+              {formik.errors.role_id}
             </Typography>
           )}
         </FormControl>
 
-        <TextField
+        <FormControl
           fullWidth
           required
-          id="superior_id"
-          name="superior_id"
-          label={t("superior_id")}
-          value={formik.values.superior_id}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
           error={
             formik.touched.superior_id && Boolean(formik.errors.superior_id)
           }
-          helperText={
-            formik.touched.superior_id &&
-            Boolean(formik.errors.superior_id) &&
-            formik.errors.superior_id
-          }
-        />
+        >
+          <InputLabel id="superior_id-label">{t("superior_id")}</InputLabel>
+          <Select
+            labelId="superior_id-label"
+            id="superior_id"
+            name="superior_id"
+            value={
+              selectedSuperiorUser ? selectedSuperiorUser.customer_name : ""
+            }
+            renderValue={(value) => value}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            label={t("superior_id")}
+            disabled={!formik.values.role_id}
+          >
+            {superiorUsers && superiorUsers.length > 0 ? (
+              superiorUsers.map((user) => (
+                <MenuItem key={user.userid} value={user.userid}>
+                  {user.customer_name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled value="">
+                {t("no_options_available")}
+              </MenuItem>
+            )}
+          </Select>
+          {formik.touched.superior_id && formik.errors.superior_id && (
+            <Typography variant="caption" color="error">
+              {formik.errors.superior_id}
+            </Typography>
+          )}
+        </FormControl>
 
         <FormControl
           fullWidth

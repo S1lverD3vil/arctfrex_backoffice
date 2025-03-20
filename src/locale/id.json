@@ -178,7 +178,9 @@
     "all": "Semua",
     "lead": "Penunjuk",
     "PresentasiRunningProfit": "Presentasi Running Profit",
-    "PresentasiAllProfit": "Presentasi All Profit"
+    "PresentasiAllProfit": "Presentasi All Profit",
+    "referral_code": "Referral Code",
+    "no_options_available": "Tidak ada opsi yang tersedia"
   },
   "Page": {
     "Index": {
