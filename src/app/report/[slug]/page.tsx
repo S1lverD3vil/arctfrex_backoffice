@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Box } from "@mui/material";
 import { Breadcrumbs } from "@/components";
 import ReportCodeTable from "@/views/report/code/ReportCodeTable";
+import ReportCodeExport from "@/views/report/code/ReportExport";
 
 export const metadata: Metadata = {
   title: "Report | PaNen",
@@ -20,6 +21,7 @@ const ReportPage = ({ params }: { params: { slug: string } }) => {
       gap={2}
     >
       <Breadcrumbs items={breadcrumbItems} />
+
       <ReportCodeTable code={params.slug} />
     </Box>
   );

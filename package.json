@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -19,6 +19,7 @@
     "@tanstack/react-query": "^5.51.24",
     "@uidotdev/usehooks": "^2.4.1",
     "axios": "^1.7.4",
+    "file-saver": "^2.0.5",
     "formik": "^2.4.6",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
@@ -31,6 +32,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.9",
     "@types/node": "^20",
     "@types/react": "^18",

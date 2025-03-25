@@ -38,7 +38,7 @@ const validationSchema = Yup.object({
   mobile_phone: Yup.string().required("Mobile Phone is required"),
   password: Yup.string().required("Password is required"),
   role_id: Yup.string().required("Role ID Type is required"),
-  superior_id: Yup.string().required("Superior ID is required"),
+  superior_id: Yup.string(),
   job_position: Yup.number().required("Job Position is required"),
 });
 

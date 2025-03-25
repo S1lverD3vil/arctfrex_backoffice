@@ -180,7 +180,10 @@
     "PresentasiRunningProfit": "Presentasi Running Profit",
     "PresentasiAllProfit": "Presentasi All Profit",
     "referral_code": "Referral Code",
-    "no_options_available": "No options available"
+    "no_options_available": "No options available",
+    "search": "Search",
+    "start_date": "Start Date",
+    "end_date": "End Date"
   },
   "Page": {
     "Index": {

@@ -180,7 +180,10 @@
     "PresentasiRunningProfit": "Presentasi Running Profit",
     "PresentasiAllProfit": "Presentasi All Profit",
     "referral_code": "Referral Code",
-    "no_options_available": "Tidak ada opsi yang tersedia"
+    "no_options_available": "Tidak ada opsi yang tersedia",
+    "search": "Cari",
+    "start_date": "Tanggal Mulai",
+    "end_date": "Tanggal Akhir"
   },
   "Page": {
     "Index": {
