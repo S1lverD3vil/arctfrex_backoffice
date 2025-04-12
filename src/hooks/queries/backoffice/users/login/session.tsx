@@ -1,6 +1,6 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import axios from "@/libs/axios";
-import { ROLE_ID } from "@/constants/roles";
+import { GROUP_ROLES } from "@/constants/roles";
 
 const ENDPOINT = "/backoffice/users/login/session";
 
@@ -15,7 +15,7 @@ export interface UserLoginSessionResponse {
   email: string;
   access_token: string;
   expiration: number;
-  role_id: ROLE_ID;
+  role_id: GROUP_ROLES;
   referral_code: string;
 }
 

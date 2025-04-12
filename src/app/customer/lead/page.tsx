@@ -14,10 +14,7 @@ const CustomerLeadPage = () => {
   const breadcrumbItems = [{ text: t("lead"), linkTo: "/customer/lead" }];
 
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", px: 3, py: 2 }}
-      gap={2}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
       <Breadcrumbs items={breadcrumbItems} />
       <CustomerLeadTable />
     </Box>

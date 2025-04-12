@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { createContext, useContext, useReducer } from "react";
 
 const initialAppShellState = {
-  title: "",
+  appBarTitle: "",
   pathname: "",
   searchParams: {} as Record<string, string>,
   params: {} as Record<string, string>,
@@ -24,7 +24,7 @@ type AppShellAction = { type: AppShellActionKeys; payload: string };
 const useAppShellReducer = (state: AppShellState, action: AppShellAction) => {
   switch (action.type) {
     case AppShellActionKeys.SET_TITLE:
-      return { ...state, title: action.payload };
+      return { ...state, appBarTitle: action.payload };
     case AppShellActionKeys.SET_ACTIVE_MENU:
       return { ...state, activeMenu: action.payload };
     default:
@@ -36,8 +36,9 @@ const useAppShell = (initialState: AppShellState) => {
   const [state, dispatch] = useReducer(useAppShellReducer, initialState);
   const pathname = usePathname();
 
-  const setAppBarTitle = (title: string) => {
-    dispatch({ type: AppShellActionKeys.SET_TITLE, payload: title });
+  const setAppBarTitle = (appBarTitle: string) => {
+    console.log(appBarTitle);
+    dispatch({ type: AppShellActionKeys.SET_TITLE, payload: appBarTitle });
   };
 
   const setActiveMenu = (activeMenu: any) => {

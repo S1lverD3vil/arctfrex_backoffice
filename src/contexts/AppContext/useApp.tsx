@@ -2,7 +2,7 @@
 
 import { useEffect, useReducer } from "react";
 import { useRouter } from "next/navigation";
-import { ROLE_ID } from "@/constants/roles";
+import { GROUP_ROLES } from "@/constants/roles";
 import {
   LOCAL_STORAGE_KEYS,
   clearLocalStorage,
@@ -17,7 +17,7 @@ export const initialAppState = {
     access_token: "",
     expiration: 0,
     role_id: "",
-    referral_code: ""
+    referral_code: "",
   },
   setUserSession: () => {},
   clearUserSession: () => {},

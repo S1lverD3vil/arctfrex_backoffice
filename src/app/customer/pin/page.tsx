@@ -14,10 +14,7 @@ const CustomerPinPage = () => {
   const breadcrumbItems = [{ text: t("pin"), linkTo: "/customer/Pin" }];
 
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", px: 3, py: 2 }}
-      gap={2}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
       <Breadcrumbs items={breadcrumbItems} />
       <Typography variant="h5" gutterBottom>
         {t("customer_pin_form")}

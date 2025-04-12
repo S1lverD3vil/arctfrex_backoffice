@@ -22,10 +22,7 @@ const TransationsWithdrawalDetailsPage = ({
   ];
 
   return (
-    <Box
-      sx={{ display: "flex", flexDirection: "column", px: 3, py: 2 }}
-      gap={2}
-    >
+    <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
       <Breadcrumbs items={breadcrumbItems} />
 
       <WithdrawalApprovalAction />
