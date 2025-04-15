@@ -13,9 +13,9 @@ import {
   tableCellClasses,
   Button,
   Switch,
+  Box,
 } from "@mui/material";
 import { convertKeyToSpaceSeparated, renderCell } from "@/utils/strings";
-import { Edit } from "@mui/icons-material";
 import { useTranslations } from "next-intl";
 import _ from "lodash";
 
@@ -25,6 +25,7 @@ interface TableProps<T> {
   onRowClick?: (row: T) => void;
   onEdit?: (row: T) => void;
   onDeactive?: (row: T) => void;
+  isTranslated?: boolean;
 }
 
 // custom styles for table cells
@@ -44,6 +45,7 @@ const Table = <T extends Record<string, any>>({
   onRowClick: handleRowClick,
   onEdit,
   onDeactive,
+  isTranslated = true,
 }: TableProps<T>) => {
   const isEditable = Boolean(onEdit);
   const isDeactiveable = Boolean(onDeactive);
@@ -83,7 +85,9 @@ const Table = <T extends Record<string, any>>({
                 key={String(column)}
                 style={{ textTransform: "capitalize", fontWeight: "bold" }}
               >
-                {convertKeyToSpaceSeparated(String(t(column)))}
+                {isTranslated
+                  ? convertKeyToSpaceSeparated(String(t(column)))
+                  : String(column)}
               </StyledTableCell>
             ))}
             {isEditable && (
@@ -111,43 +115,49 @@ const Table = <T extends Record<string, any>>({
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, rowIndex) => (
-            <TableRow
-              key={rowIndex}
-              hover
-              style={{ cursor: "pointer" }}
-              {...(handleRowClick && { onClick: () => handleRowClick(row) })}
-            >
-              {columns.map((column) => {
-                const isObject = _.isObject(row[column]);
-                const color = row[column]?.color;
+          {!data.length ? (
+            <Box component="p" px={2} sx={{ fontSize: "0.875rem" }}>
+              No Records Found.
+            </Box>
+          ) : (
+            data.map((row, rowIndex) => (
+              <TableRow
+                key={rowIndex}
+                hover
+                style={{ cursor: "pointer" }}
+                {...(handleRowClick && { onClick: () => handleRowClick(row) })}
+              >
+                {columns.map((column) => {
+                  const isObject = _.isObject(row[column]);
+                  const color = row[column]?.color;
 
-                return (
-                  <StyledTableCell
-                    key={String(column)}
-                    {...(isObject && { color })}
-                  >
-                    {renderCell(row[column])}
+                  return (
+                    <StyledTableCell
+                      key={String(column)}
+                      {...(isObject && { color })}
+                    >
+                      {renderCell(row[column])}
+                    </StyledTableCell>
+                  );
+                })}
+                {isEditable && (
+                  <StyledTableCell style={{ zIndex: 1, cursor: "pointer" }}>
+                    <Button variant="text" onClick={(e) => handleEdit(e, row)}>
+                      Edit
+                    </Button>
                   </StyledTableCell>
-                );
-              })}
-              {isEditable && (
-                <StyledTableCell style={{ zIndex: 1, cursor: "pointer" }}>
-                  <Button variant="text" onClick={(e) => handleEdit(e, row)}>
-                    Edit
-                  </Button>
-                </StyledTableCell>
-              )}
-              {isDeactiveable && (
-                <StyledTableCell style={{ zIndex: 1, cursor: "pointer" }}>
-                  <Switch
-                    checked={row.is_active}
-                    onClick={(e) => handleDeactive(e, row)}
-                  />
-                </StyledTableCell>
-              )}
-            </TableRow>
-          ))}
+                )}
+                {isDeactiveable && (
+                  <StyledTableCell style={{ zIndex: 1, cursor: "pointer" }}>
+                    <Switch
+                      checked={row.is_active}
+                      onClick={(e) => handleDeactive(e, row)}
+                    />
+                  </StyledTableCell>
+                )}
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </MUITable>
     </TableContainer>
