@@ -1,25 +1,10 @@
 import { Metadata } from "next";
-import { Table } from "@/components";
+import WPBListWPCallTable from "@/views/wpb/list-wp-call/WPBListWPCallTable";
 
 export const metadata: Metadata = {
   title: "PaNen",
 };
 
-const DummyPage = () => {
-  const data: Array<any> = [];
-
-  const columns: Array<string> = [
-    "No Agrement",
-    "Nama Lengkap",
-    "No Telp",
-    "Email",
-    "Pengajuan Wp",
-    "Wakil Pialang",
-    "Status Wp",
-    "Actions",
-  ];
-
-  return <Table data={data} columns={columns} isTranslated={false} />;
-};
-
-export default DummyPage;
+export default function ListWPCallPage() {
+  return <WPBListWPCallTable />;
+}

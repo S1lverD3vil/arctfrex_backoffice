@@ -1,31 +1,38 @@
 "use client";
 
 import { Table } from "@/components";
-import {
-  Customer,
-  useCustomerUsersLeads,
-} from "@/hooks/queries/backoffice/customers/users/leads";
+import { useAccountAll, Account } from "@/hooks/queries/backoffice/account/all";
+import { approvalStatusToString } from "@/models/account";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-const CustomerLeadTable = () => {
+const WPBListWPCallTable = () => {
   const router = useRouter();
-  const { data, isLoading, isError } = useCustomerUsersLeads();
+  const { data, isLoading, isError } = useAccountAll();
 
   const tableData = useMemo(() => {
     if (!data?.data) {
       return [];
     }
 
-    return data.data;
+    return data.data.map((account) => ({
+      ...account,
+      approval_status: approvalStatusToString(account.approval_status),
+    }));
   }, [data?.data]);
 
-  const columnsToShow: Array<keyof Customer> = [
+  const columnsToShow: Array<keyof Account> = [
     "email",
     "name",
-    "mobile_phone",
+    "approval_status",
   ];
+
+  const handleRowClick = (row: Account) => {
+    router.push(
+      "/wpb/list-wp-call/" + row.userid + "?accountid=" + row.accountid
+    );
+  };
 
   const renderByStatus = useMemo(() => {
     if (isLoading)
@@ -44,7 +51,13 @@ const CustomerLeadTable = () => {
 
     if (isError) return <Typography>Error loading data</Typography>;
 
-    return <Table data={tableData} columns={columnsToShow} />;
+    return (
+      <Table
+        data={tableData}
+        columns={columnsToShow}
+        onRowClick={handleRowClick}
+      />
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isError, tableData]);
 
@@ -61,4 +74,4 @@ const CustomerLeadTable = () => {
   );
 };
 
-export default CustomerLeadTable;
+export default WPBListWPCallTable;

@@ -6,3 +6,5 @@ export { default as DetailCard } from "./DetailCard";
 export { default as Image } from "./Image";
 export { default as ApprovalAction } from "./ApprovalAction";
 export { default as PinInput } from "./PinInput";
+export { default as SaveButton } from "./SaveButton";
+export { default as EditButton } from "./EditButton";
