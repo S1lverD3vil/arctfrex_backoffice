@@ -1,4 +1,9 @@
-import { UseQueryOptions, useQuery } from "@tanstack/react-query";
+import {
+  UseMutationOptions,
+  UseQueryOptions,
+  useMutation,
+  useQuery,
+} from "@tanstack/react-query";
 import axios from "@/libs/axios";
 
 const ENDPOINT = "/backoffice/customers/users/finance";
@@ -46,5 +51,19 @@ export const useCustomersUsersFinance = ({ userId, ...options }: Options) => {
 
       return data;
     },
+  });
+};
+
+export const useCustomersUsersFinanceMutation = ({
+  userId,
+  ...options
+}: UseMutationOptions<any, Error, any> & { userId: string }) => {
+  return useMutation({
+    mutationFn: async (payload) => {
+      const { data } = await axios.post<any>(ENDPOINT + "/" + userId, payload);
+
+      return data;
+    },
+    ...options,
   });
 };

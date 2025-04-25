@@ -17,6 +17,7 @@ const EditButton = ({
     <Button
       variant="contained"
       onClick={() => setEditMode(!editMode)}
+      {...(editMode && { color: "warning" })}
       {...props}
     >
       {!editMode ? t("edit") : t("cancel")}

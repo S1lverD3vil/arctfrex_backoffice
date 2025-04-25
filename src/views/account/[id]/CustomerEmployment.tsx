@@ -1,11 +1,22 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import * as Yup from "yup";
 import { Typography, CircularProgress, Box } from "@mui/material";
-import { useCustomersUsersEmployment } from "@/hooks/queries/backoffice/customers/users/employment";
+import {
+  useCustomersUsersEmployment,
+  useCustomersUsersEmploymentMutation,
+} from "@/hooks/queries/backoffice/customers/users/employment";
 import DetailCard, { DetailCardData } from "@/components/DetailCard";
-import { cleanObject } from "@/utils/objects";
 import { useTranslations } from "next-intl";
+import { EditButton, SaveButton } from "@/components";
+import { useFormik } from "formik";
+
+// Define the type for form values
+interface FormValues {}
+
+// Validation schema using Yup
+const validationSchema = Yup.object({});
 
 type CustomerEmploymentProps = React.PropsWithChildren<{
   userId: string;
@@ -19,15 +30,29 @@ const CustomerEmployment = (props: CustomerEmploymentProps) => {
     data: employment,
     isLoading,
     isError,
+    refetch: refetchAddress,
   } = useCustomersUsersEmployment({ userId });
 
-  const detailData = useMemo(() => {
-    if (!employment) return {};
+  const { mutateAsync: updateCustomerAddress } =
+    useCustomersUsersEmploymentMutation({
+      userId,
+    });
 
-    return {
-      ...cleanObject(employment),
-    };
-  }, [employment]);
+  const [editMode, setEditMode] = useState(false);
+
+  const formik = useFormik<FormValues>({
+    initialValues: employment as any,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      try {
+        await updateCustomerAddress(values);
+        await refetchAddress();
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+      setEditMode(false);
+    },
+  });
 
   const renderByStatus = useMemo(() => {
     if (isLoading)
@@ -46,19 +71,30 @@ const CustomerEmployment = (props: CustomerEmploymentProps) => {
 
     if (isError) return <Typography>Error loading data</Typography>;
 
-    if (detailData)
+    if (employment)
       return (
         <DetailCard
           title={t("customer_employment")}
-          data={detailData as unknown as DetailCardData}
+          data={employment as unknown as DetailCardData}
+          editMode={editMode}
+          formik={formik}
         />
       );
 
     return <Typography>No data found</Typography>;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isError, t]);
+  }, [isLoading, isError, t, editMode, formik]);
 
-  return <>{renderByStatus}</>;
+  return (
+    <Box display="flex" flexDirection="column" gap={2}>
+      <Box display="flex" gap={1}>
+        <EditButton editMode={editMode} setEditMode={setEditMode} />
+        {editMode && <SaveButton onClick={() => formik.submitForm()} />}
+      </Box>
+
+      {renderByStatus}
+    </Box>
+  );
 };
 
 export default CustomerEmployment;

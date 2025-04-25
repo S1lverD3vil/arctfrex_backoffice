@@ -1,12 +1,24 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import * as Yup from "yup";
 import { Typography, CircularProgress, Box } from "@mui/material";
-import { useCustomersUsersAddress } from "@/hooks/queries/backoffice/customers/users/address";
+import {
+  useCustomersUsersAddress,
+  useCustomersUsersAddressMutation,
+} from "@/hooks/queries/backoffice/customers/users/address";
 import DetailCard, { DetailCardData } from "@/components/DetailCard";
+import { EditButton, SaveButton } from "@/components";
 import { cleanObject, cleanObjectKeys, removePrefix } from "@/utils/objects";
 import _ from "lodash";
 import { useTranslations } from "next-intl";
+import { useFormik } from "formik";
+
+// Define the type for form values
+interface FormValues {}
+
+// Validation schema using Yup
+const validationSchema = Yup.object({});
 
 type CustomerAddressProps = React.PropsWithChildren<{
   userId: string;
@@ -20,19 +32,29 @@ const CustomerAddress = (props: CustomerAddressProps) => {
     data: address,
     isLoading,
     isError,
+    refetch: refetchAddress,
   } = useCustomersUsersAddress({ userId });
 
-  const detailData = useMemo(() => {
-    if (!address) return {};
+  const { mutateAsync: updateCustomerAddress } =
+    useCustomersUsersAddressMutation({
+      userId,
+    });
 
-    return cleanObject(
-      removePrefix(address, "dom_"), // remove dom_ prefix
-      [
-        ...cleanObjectKeys,
-        ..._.keys(address).filter((key) => key.startsWith("ktp_")),
-      ] // remove ktp_ prefix
-    );
-  }, [address]);
+  const [editMode, setEditMode] = useState(false);
+
+  const formik = useFormik<FormValues>({
+    initialValues: address as any,
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      try {
+        await updateCustomerAddress(values);
+        await refetchAddress();
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+      setEditMode(false);
+    },
+  });
 
   const renderByStatus = useMemo(() => {
     if (isLoading)
@@ -51,19 +73,30 @@ const CustomerAddress = (props: CustomerAddressProps) => {
 
     if (isError) return <Typography>Error loading data</Typography>;
 
-    if (detailData)
+    if (address)
       return (
         <DetailCard
           title={t("customer_address")}
-          data={detailData as unknown as DetailCardData}
+          data={address as unknown as DetailCardData}
+          editMode={editMode}
+          formik={formik}
         />
       );
 
     return <Typography>No data found</Typography>;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isError, t]);
+  }, [isLoading, isError, t, editMode, formik]);
 
-  return <>{renderByStatus}</>;
+  return (
+    <Box display="flex" flexDirection="column" gap={2}>
+      <Box display="flex" gap={1}>
+        <EditButton editMode={editMode} setEditMode={setEditMode} />
+        {editMode && <SaveButton onClick={() => formik.submitForm()} />}
+      </Box>
+
+      {renderByStatus}
+    </Box>
+  );
 };
 
 export default CustomerAddress;
