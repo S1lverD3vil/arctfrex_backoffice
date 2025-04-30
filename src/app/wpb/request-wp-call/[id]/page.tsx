@@ -9,11 +9,21 @@ export const metadata: Metadata = {
   description: "PaNen Account Details",
 };
 
-export default function ListWPCallPage({ params }: { params: { id: string } }) {
+export default function RequestWPCallPage({
+  params,
+  searchParams: { accountid },
+}: {
+  params: { id: string };
+  searchParams: { accountid: string };
+}) {
   const userid = params.id;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
+      {accountid && <AccountApprovalAction />}
+
+      {accountid && <AccountUploadRecording />}
+
       <AccountTabs userId={userid} />
     </Box>
   );

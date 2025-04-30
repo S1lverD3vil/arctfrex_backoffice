@@ -77,6 +77,8 @@ const CustomerEmergencyContact = (props: CustomerEmergencyContactProps) => {
         <DetailCard
           title={t("customer_emergency_contact")}
           data={emergencyContact as unknown as DetailCardData}
+          editMode={editMode}
+          formik={formik}
         />
       );
 

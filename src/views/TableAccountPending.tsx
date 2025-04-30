@@ -1,15 +1,18 @@
 "use client";
 
 import { Table } from "@/components";
-import { useAccountAll, Account } from "@/hooks/queries/backoffice/account/all";
+import {
+  Account,
+  useAccountPending,
+} from "@/hooks/queries/backoffice/account/pending";
 import { approvalStatusToString } from "@/models/account";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 
-const WPBListWPCallTable = () => {
+const TableAccountPending = () => {
   const router = useRouter();
-  const { data, isLoading, isError } = useAccountAll();
+  const { data, isLoading, isError } = useAccountPending();
 
   const tableData = useMemo(() => {
     if (!data?.data) {
@@ -29,7 +32,9 @@ const WPBListWPCallTable = () => {
   ];
 
   const handleRowClick = (row: Account) => {
-    router.push("/wpb/list-wp-call/" + row.userid);
+    router.push(
+      "/wpb/request-wp-call/" + row.userid + "?accountid=" + row.accountid
+    );
   };
 
   const renderByStatus = useMemo(() => {
@@ -72,4 +77,4 @@ const WPBListWPCallTable = () => {
   );
 };
 
-export default WPBListWPCallTable;
+export default TableAccountPending;

@@ -14,6 +14,7 @@ import { cleanObject } from "@/utils/objects";
 import Video from "@/components/Video";
 import { useTranslations } from "next-intl";
 import { useFormik } from "formik";
+import { useAccountDetailPageContext } from "./AccountDetailPageContext";
 
 // Define the type for form values
 interface FormValues {}
@@ -27,6 +28,7 @@ type CustomerProfileProps = React.PropsWithChildren<{
 
 const CustomerProfile = (props: CustomerProfileProps) => {
   const { userId } = props;
+  const { accountid } = useAccountDetailPageContext();
 
   const t = useTranslations("Page.Customer.Account.Slug");
   const {
@@ -108,10 +110,12 @@ const CustomerProfile = (props: CustomerProfileProps) => {
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      <Box display="flex" gap={1}>
-        <EditButton editMode={editMode} setEditMode={setEditMode} />
-        {editMode && <SaveButton onClick={() => formik.submitForm()} />}
-      </Box>
+      {accountid && (
+        <Box display="flex" gap={1}>
+          <EditButton editMode={editMode} setEditMode={setEditMode} />
+          {editMode && <SaveButton onClick={() => formik.submitForm()} />}
+        </Box>
+      )}
 
       {renderByStatus}
     </Box>
