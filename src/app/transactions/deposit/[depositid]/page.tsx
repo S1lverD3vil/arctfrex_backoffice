@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { Box } from "@mui/material";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import DepositApprovalAction from "@/views/transactions/deposit/[depositid]/DepositApprovalAction";
 import DepositDetail from "@/views/transactions/deposit/[depositid]/DepositDetail";
 
@@ -16,15 +15,8 @@ const TransationsDepositDetailsPage = ({
 }) => {
   const depositid = params.depositid;
 
-  const breadcrumbItems = [
-    { text: "Deposit", linkTo: "/transactions/deposit" },
-    { text: "Detail", linkTo: "/transactions/deposit/" + depositid },
-  ];
-
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
-      <Breadcrumbs items={breadcrumbItems} />
-
       <DepositApprovalAction />
 
       <DepositDetail depositid={depositid} />

@@ -245,20 +245,54 @@ const AppShellWrappedContext = (props: AppShellProps) => {
         <Divider />
 
         <List component="nav" sx={{ flex: 1 }}>
-          <SPAMenu />
-          <Divider />
-          <MultiMenu />
-          <Divider />
-          <ManagementAccountMenu />
-          <Divider />
-          <WPBMenu />
-          <Divider />
-          <APUPPTMenu />
-          <Divider />
-          <CustomerServiceMenu />
-          <Divider />
-          <CRMMenu />
-          {/* {listMenu()} */}
+          {["admin", "spa"].includes(userSession.role_id) && (
+            <>
+              <SPAMenu />
+              <Divider />
+            </>
+          )}
+
+          {["admin", "multi"].includes(userSession.role_id) && (
+            <>
+              <MultiMenu />
+              <Divider />
+            </>
+          )}
+
+          {["admin", "account"].includes(userSession.role_id) && (
+            <>
+              <ManagementAccountMenu />
+              <Divider />
+            </>
+          )}
+
+          {["admin", "wpb"].includes(userSession.role_id) && (
+            <>
+              <WPBMenu />
+              <Divider />
+            </>
+          )}
+
+          {["admin", "multi"].includes(userSession.role_id) && (
+            <>
+              <APUPPTMenu />
+              <Divider />
+            </>
+          )}
+
+          {["admin", "cs"].includes(userSession.role_id) && (
+            <>
+              <CustomerServiceMenu />
+              <Divider />
+            </>
+          )}
+
+          {["admin", "crm"].includes(userSession.role_id) && (
+            <>
+              <CRMMenu />
+              <Divider />
+            </>
+          )}
         </List>
 
         <Box

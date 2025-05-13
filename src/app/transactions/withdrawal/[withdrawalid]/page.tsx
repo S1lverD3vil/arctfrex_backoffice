@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { Box } from "@mui/material";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import WithdrawalApprovalAction from "@/views/transactions/withdrawal/[withdrawalid]/WithdrawalApprovalAction";
 import WithdrawalDetail from "@/views/transactions/withdrawal/[withdrawalid]/WithdrawalDetail";
 
@@ -16,15 +15,8 @@ const TransationsWithdrawalDetailsPage = ({
 }) => {
   const withdrawalid = params.withdrawalid;
 
-  const breadcrumbItems = [
-    { text: "Withdrawal", linkTo: "/transactions/withdrawal" },
-    { text: "Detail", linkTo: "/transactions/withdrawal/" + withdrawalid },
-  ];
-
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
-      <Breadcrumbs items={breadcrumbItems} />
-
       <WithdrawalApprovalAction />
 
       <WithdrawalDetail withdrawalid={withdrawalid} />

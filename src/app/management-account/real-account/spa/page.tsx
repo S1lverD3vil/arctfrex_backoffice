@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: "PaNen",
 };
 
-const DummyPage = () => {
+export default function Page() {
   const data: Array<any> = [];
 
   const columns: Array<string> = [
@@ -19,6 +19,4 @@ const DummyPage = () => {
   ];
 
   return <Table data={data} columns={columns} isTranslated={false} />;
-};
-
-export default DummyPage;
+}
