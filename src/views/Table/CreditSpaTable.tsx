@@ -52,10 +52,6 @@ const CreditSpaTable = (props: Props) => {
     "approval_status",
   ];
 
-  const handleRowClick = (row: Deposit) => {
-    router.push("/transactions/deposit/" + row.deposit_id);
-  };
-
   const RenderTable = () => {
     if (isLoading)
       return (
@@ -75,11 +71,7 @@ const CreditSpaTable = (props: Props) => {
 
     return (
       <>
-        <Table
-          data={tableData}
-          columns={columnsToShow}
-          onRowClick={handleRowClick}
-        />
+        <Table data={tableData} columns={columnsToShow} />
 
         <MUIPagination
           page={pagination.current_page ?? 1}

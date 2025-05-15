@@ -53,7 +53,7 @@ const WithdrawalMultiTable = (props: Props) => {
   ];
 
   const handleRowClick = (row: Withdrawal) => {
-    router.push("/transactions/deposit/" + row.withdrawal_id);
+    router.push("/transactions/withdrawal/" + row.withdrawal_id);
   };
 
   const RenderTable = () => {
