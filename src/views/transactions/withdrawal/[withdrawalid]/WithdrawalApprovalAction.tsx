@@ -18,9 +18,13 @@ const WithdrawalApprovalAction = () => {
     mutate: doWithdrawalPendingApprovalApproved,
   } = useWithdrawalPendingApproval({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["withdrawal-pending"] });
-
-      router.push("/transactions/withdrawal");
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "/backoffice/withdrawal/pending/spa",
+          "/backoffice/withdrawal/pending/multi",
+        ],
+      });
+      router.back();
     },
   });
 
@@ -29,9 +33,13 @@ const WithdrawalApprovalAction = () => {
     mutate: doWithdrawalPendingApprovalReject,
   } = useWithdrawalPendingApproval({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["withdrawal-pending"] });
-
-      router.push("/transactions/withdrawal");
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "/backoffice/withdrawal/pending/spa",
+          "/backoffice/withdrawal/pending/multi",
+        ],
+      });
+      router.back();
     },
   });
 

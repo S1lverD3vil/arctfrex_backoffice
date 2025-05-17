@@ -21,18 +21,26 @@ const DepositApprovalAction = () => {
     mutate: doDepositPendingApprovalApproved,
   } = useDepositPendingApproval({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["deposit-pending"] });
-
-      router.push("/transactions/deposit");
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "/backoffice/deposit/pending/spa",
+          "/backoffice/deposit/pending/multi",
+        ],
+      });
+      router.back();
     },
   });
 
   const { isPending: isRejectPending, mutate: doDepositPendingApprovalReject } =
     useDepositPendingApproval({
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["deposit-pending"] });
-
-        router.push("/transactions/deposit");
+        await queryClient.invalidateQueries({
+          queryKey: [
+            "/backoffice/deposit/pending/spa",
+            "/backoffice/deposit/pending/multi",
+          ],
+        });
+        router.back();
       },
     });
 
