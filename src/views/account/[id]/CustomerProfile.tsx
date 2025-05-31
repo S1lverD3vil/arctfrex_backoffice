@@ -15,6 +15,8 @@ import Video from "@/components/Video";
 import { useTranslations } from "next-intl";
 import { useFormik } from "formik";
 import { useAccountDetailPageContext } from "./AccountDetailPageContext";
+import { useStorageUpload } from "@/hooks/queries/backoffice/storage/upload";
+import { enqueueSnackbar } from "notistack";
 
 // Define the type for form values
 interface FormValues {}
@@ -43,7 +45,77 @@ const CustomerProfile = (props: CustomerProfileProps) => {
       userId,
     });
 
+  const { mutate: doStorageUpload, isPending } = useStorageUpload({
+    onSuccess: async (data) => {
+      enqueueSnackbar(data.message, {
+        variant: "success",
+      });
+    },
+    onError: () => {
+      enqueueSnackbar(t("upload_error"), { variant: "error" });
+    },
+  });
+
   const [editMode, setEditMode] = useState(false);
+
+  const fields = {
+    selfie_photo: {
+      type: "image",
+      label: t("selfie_photo"),
+      onUpload: (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        formik.setFieldValue("selfie_photo", previewUrl);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("documentType", "selfie");
+        formData.append("accountId", accountid);
+        formData.append("userId", userId);
+        doStorageUpload(formData);
+      },
+    },
+    npwp_photo: {
+      type: "image",
+      label: t("npwp_photo"),
+      onUpload: (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        formik.setFieldValue("npwp_photo", previewUrl);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("documentType", "npwp");
+        formData.append("accountId", accountid);
+        formData.append("userId", userId);
+        doStorageUpload(formData);
+      },
+    },
+    additional_document_photo: {
+      type: "image",
+      label: t("additional_document_photo"),
+      onUpload: (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        formik.setFieldValue("additional_document_photo", previewUrl);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("documentType", "additional_doc");
+        formData.append("accountId", accountid);
+        formData.append("userId", userId);
+        doStorageUpload(formData);
+      },
+    },
+    declaration_video: {
+      type: "video",
+      label: t("declaration_video"),
+      onUpload: (file: File) => {
+        const previewUrl = URL.createObjectURL(file);
+        formik.setFieldValue("declaration_video", previewUrl);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("documentType", "declaration");
+        formData.append("accountId", accountid);
+        formData.append("userId", userId);
+        doStorageUpload(formData);
+      },
+    },
+  };
 
   const detailData = useMemo(() => {
     if (!profile) return {};
@@ -101,6 +173,7 @@ const CustomerProfile = (props: CustomerProfileProps) => {
           data={detailData as unknown as DetailCardData}
           editMode={editMode}
           formik={formik}
+          fields={fields}
         />
       );
 

@@ -33,7 +33,9 @@ const AccountDetailsPage = ({
 
       {accountid && <AccountApprovalAction />}
 
-      {accountid && <AccountUploadRecording />}
+      {accountid && (
+        <AccountUploadRecording userId={userid} accountId={accountid} />
+      )}
 
       <AccountTabs userId={userid} />
     </Box>

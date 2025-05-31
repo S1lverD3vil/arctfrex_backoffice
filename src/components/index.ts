@@ -8,3 +8,4 @@ export { default as ApprovalAction } from "./ApprovalAction";
 export { default as PinInput } from "./PinInput";
 export { default as SaveButton } from "./SaveButton";
 export { default as EditButton } from "./EditButton";
+export { default as FileUpload } from "./FileUpload";

@@ -3,19 +3,19 @@
 import { useState, ChangeEvent } from "react";
 import {
   Box,
-  Button,
-  IconButton,
-  Typography,
   styled,
+  CardMedia,
   Card,
   CardContent,
-  CardMedia,
+  IconButton,
+  Typography,
 } from "@mui/material";
-import { Clear, CloudUpload } from "@mui/icons-material";
 import { useStorageUpload } from "@/hooks/queries/backoffice/storage/upload";
 import { useSnackbar } from "notistack";
 import { useAccountDetailPageContext } from "./AccountDetailPageContext";
 import { useTranslations } from "next-intl";
+import { FileUpload } from "@/components";
+import { Clear } from "@mui/icons-material";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,8 +29,15 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const AccountUploadRecording = () => {
-  const { accountid, userid } = useAccountDetailPageContext();
+type AccountUploadRecordingProps = {
+  userId: string;
+  accountId: string;
+};
+
+const AccountUploadRecording = ({
+  userId,
+  accountId,
+}: AccountUploadRecordingProps) => {
   const { enqueueSnackbar } = useSnackbar();
   const t = useTranslations("Page.Customer.Account.Slug");
 
@@ -48,16 +55,7 @@ const AccountUploadRecording = () => {
     },
   });
 
-  const handleUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-
-    if (!files || files.length === 0) {
-      enqueueSnackbar(t("no_file_selected"), { variant: "warning" });
-      return;
-    }
-
-    const file = files[0];
-
+  const handleUpload = (file: File) => {
     if (!file.type.includes("mp4")) {
       enqueueSnackbar(t("invalid_file_type"), { variant: "error" });
       return;
@@ -72,45 +70,36 @@ const AccountUploadRecording = () => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("documentType", "realaccount_callrecording");
-    formData.append("accountId", accountid);
-    formData.append("userId", userid);
+    formData.append("accountId", accountId);
+    formData.append("userId", userId);
 
     doStorageUpload(formData);
   };
 
-  const handleClearPreview = () => {
-    setPreviewUrl(null);
-    setFileName(null);
-  };
-
   return (
     <Box>
-      <Button
-        component="label"
-        role={undefined}
-        variant="contained"
-        tabIndex={-1}
-        startIcon={<CloudUpload />}
+      <FileUpload
+        accept="video/mp4"
+        label={isPending ? `${t("uploading")}...` : t("upload_record")}
         disabled={isPending}
-      >
-        {isPending ? `${t("uploading")}...` : t("upload_record")}
-        <VisuallyHiddenInput
-          type="file"
-          accept=".mp4"
-          onChange={handleUpload}
-        />
-      </Button>
-
-      {previewUrl && (
-        <Card sx={{ marginTop: 2, maxWidth: 400 }}>
-          <CardMedia
-            component="video"
-            src={previewUrl}
-            controls
-            sx={{ height: 200 }}
-          />
-        </Card>
-      )}
+        onUpload={handleUpload}
+        renderPreview={(file, url, handleClear) => (
+          <Card>
+            <CardMedia
+              component="video"
+              src={url}
+              controls
+              sx={{ height: 200 }}
+            />
+            <CardContent>
+              <IconButton onClick={handleClear}>
+                <Clear />
+              </IconButton>
+              <Typography variant="body2">{file?.name}</Typography>
+            </CardContent>
+          </Card>
+        )}
+      />
     </Box>
   );
 };

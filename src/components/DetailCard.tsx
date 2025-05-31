@@ -5,12 +5,14 @@ import {
   Grid,
   Typography,
   TextField,
-  Button,
+  Box,
 } from "@mui/material";
 import { convertKeyToSpaceSeparated } from "@/utils/strings";
 import { useTranslations } from "next-intl";
 import { cleanObject, cleanObjectKeys, removePrefix } from "@/utils/objects";
 import _ from "lodash";
+import { FileUpload, Image } from "@/components";
+import Video from "./Video";
 
 export type DetailCardData = Record<
   string,
@@ -22,6 +24,7 @@ interface DetailCardProps {
   data: DetailCardData;
   editMode?: boolean;
   formik?: any;
+  fields?: Record<string, any>;
 }
 
 const DetailCard: React.FC<DetailCardProps> = ({
@@ -29,6 +32,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
   data,
   editMode = false,
   formik,
+  fields = {},
 }) => {
   const t = useTranslations("Data");
 
@@ -65,6 +69,34 @@ const DetailCard: React.FC<DetailCardProps> = ({
             </Grid>
           </Grid>
         ))
+      );
+    }
+
+    const field = fields[key];
+
+    if (editMode && field && field.type === "image") {
+      return (
+        <Box display="flex" flexDirection="column" gap={1}>
+          <FileUpload
+            accept="image/jpeg,image/jpg,image/png"
+            label="Upload Image"
+            onUpload={field.onUpload}
+          />
+          <Image src={formik.values[key]} alt="Selfie" />
+        </Box>
+      );
+    }
+
+    if (editMode && field && field.type === "video") {
+      return (
+        <Box display="flex" flexDirection="column" gap={1}>
+          <FileUpload
+            accept="video/*"
+            label="Upload Video"
+            onUpload={field.onUpload}
+          />
+          <Video src={formik.values[key]} />
+        </Box>
       );
     }
 

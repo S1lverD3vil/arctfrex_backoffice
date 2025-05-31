@@ -22,7 +22,9 @@ export default function RequestWPCallPage({
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
       {accountid && <AccountApprovalAction />}
 
-      {accountid && <AccountUploadRecording />}
+      {accountid && (
+        <AccountUploadRecording userId={userid} accountId={accountid} />
+      )}
 
       <AccountTabs userId={userid} />
     </Box>

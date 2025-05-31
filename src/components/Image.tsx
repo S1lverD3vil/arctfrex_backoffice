@@ -18,6 +18,9 @@ const Image = (props: Partial<ImageProps>) => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const safeSrc = String(src).startsWith("blob:")
+    ? src
+    : ensureHttps(String(src));
 
   if (!src) return <Box>No Image</Box>;
 
@@ -34,7 +37,7 @@ const Image = (props: Partial<ImageProps>) => {
         onClick={handleOpen}
       >
         <NextImage
-          src={ensureHttps(String(src))}
+          src={safeSrc}
           alt={alt}
           width={0}
           height={0}
@@ -87,7 +90,7 @@ const Image = (props: Partial<ImageProps>) => {
           </IconButton>
           <Box display="flex" justifyContent="center">
             <NextImage
-              src={ensureHttps(String(src))}
+              src={safeSrc}
               alt={alt}
               width={0}
               height={0}
