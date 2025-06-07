@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <WithdrawalSpaTable type="finance" />;
+  return <WithdrawalSpaTable type="finance" menutype="finance" />;
 }

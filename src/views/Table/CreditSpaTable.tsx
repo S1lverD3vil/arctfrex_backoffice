@@ -17,11 +17,12 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 type Props = {
+  menutype: string;
   type: string;
 };
 
 const CreditSpaTable = (props: Props) => {
-  const { type } = props;
+  const { menutype, type } = props;
 
   const router = useRouter();
   const [pagination, setPagination] = useState<Partial<Pagination>>({
@@ -30,7 +31,7 @@ const CreditSpaTable = (props: Props) => {
   });
 
   const { data, isLoading, isError } = useDepositCreditSpaQuery({
-    menutype: type,
+    menutype: menutype,
     ...pagination,
   });
 
@@ -52,6 +53,10 @@ const CreditSpaTable = (props: Props) => {
     "approval_status",
   ];
 
+  const handleRowClick = (row: Deposit) => {
+    router.push(`/spa/${type}/credit-in/${row.deposit_id}`);
+  };
+
   const RenderTable = () => {
     if (isLoading)
       return (
@@ -71,7 +76,11 @@ const CreditSpaTable = (props: Props) => {
 
     return (
       <>
-        <Table data={tableData} columns={columnsToShow} />
+        <Table
+          data={tableData}
+          columns={columnsToShow}
+          onRowClick={handleRowClick}
+        />
 
         <MUIPagination
           page={pagination.current_page ?? 1}

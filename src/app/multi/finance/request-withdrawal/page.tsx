@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <WithdrawalMultiTable type="finance" />;
+  return <WithdrawalMultiTable type="finance" menutype="finance" />;
 }

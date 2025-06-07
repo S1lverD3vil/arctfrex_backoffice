@@ -17,11 +17,12 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 type Props = {
+  menutype: string;
   type: string;
 };
 
 const WithdrawalMultiTable = (props: Props) => {
-  const { type } = props;
+  const { menutype, type } = props;
 
   const router = useRouter();
   const [pagination, setPagination] = useState<Partial<Pagination>>({
@@ -30,7 +31,7 @@ const WithdrawalMultiTable = (props: Props) => {
   });
 
   const { data, isLoading, isError } = useWithdrawalPendingSpaQuery({
-    menutype: type,
+    menutype,
     ...pagination,
   });
 
@@ -53,7 +54,7 @@ const WithdrawalMultiTable = (props: Props) => {
   ];
 
   const handleRowClick = (row: Withdrawal) => {
-    router.push("/transactions/withdrawal/" + row.withdrawal_id);
+    router.push(`/spa/${type}/request-withdrawal/${row.withdrawal_id}`);
   };
 
   const RenderTable = () => {

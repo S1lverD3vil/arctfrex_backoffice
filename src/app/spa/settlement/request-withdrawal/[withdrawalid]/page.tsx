@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Box } from "@mui/material";
-import WithdrawalApprovalAction from "@/views/transactions/withdrawal/[withdrawalid]/WithdrawalApprovalAction";
-import WithdrawalDetail from "@/views/transactions/withdrawal/[withdrawalid]/WithdrawalDetail";
+import { WithdrawalApprovalAction } from "@/modules/withdrawal/WithdrawalApprovalAction";
+import WithdrawalDetail from "@/modules/withdrawal/WithdrawalDetail";
 
 export const metadata: Metadata = {
   title: "Transactions Withdrawal Details | PaNen",
@@ -17,7 +17,11 @@ const TransationsWithdrawalDetailsPage = ({
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
-      <WithdrawalApprovalAction />
+      <WithdrawalApprovalAction
+        withdrawalId={withdrawalid}
+        actions={["approve", "reject"]}
+        redirectTo="/spa/settlement/request-withdrawal"
+      />
 
       <WithdrawalDetail withdrawalid={withdrawalid} />
     </Box>

@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Menu as MenuIcon,
   ExitToApp as ExitToAppIcon,
-  Dashboard as DashboardIcon,
 } from "@mui/icons-material";
 import {
   Box,
@@ -27,11 +26,7 @@ import {
 } from "@mui/material";
 import { useAppContext } from "@/contexts/AppContext/AppContext";
 import { AppShellContextProvider, useAppShellContext } from "./AppShellContext";
-import { GROUP_ROLES } from "@/constants/roles";
-import { ListMenu } from "./ListMenu";
-import { useAdminMenus } from "./useAdminMenus";
-import { useCrmMenus } from "./useCrmMenus";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import LocaleSwitcher from "@/components/LocalSwitcher/LocaleSwitcher";
 import { useTranslations } from "next-intl";
 import {
@@ -110,71 +105,17 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 const AppShellWrappedContext = (props: AppShellProps) => {
   const { children } = props;
 
-  const router = useRouter();
   const pathname = usePathname();
   const theme = useTheme();
   const t = useTranslations("AppShell");
   const { userSession, clearUserSession: handleLogout } = useAppContext();
-  const { appBarTitle, setActiveMenu, setAppBarTitle } = useAppShellContext();
-  const { menu: adminMenu } = useAdminMenus();
-  const { menu: crmMenu } = useCrmMenus();
+  const { appBarTitle } = useAppShellContext();
 
   const [open, setOpen] = useState<boolean>(true);
-
-  useEffect(() => {
-    const activeMenu = findHref([...adminMenu, ...crmMenu], pathname);
-    if (!activeMenu) {
-      return;
-    }
-    setActiveMenu(activeMenu);
-    if (!Array.isArray(activeMenu)) setAppBarTitle(activeMenu?.title);
-  }, [pathname]);
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
-  // render sidebar list menu, based on user role
-  // const listMenu = () => {
-  //   // AdminBackoffice
-  //   if (userSession.role_id === GROUP_ROLES.AdminBackoffice) {
-  //     return <ListMenu menu={adminMenu} />;
-  //   }
-
-  //   // default menu for user
-  //   return (
-  //     <ListMenu
-  //       menu={[
-  //         {
-  //           title: t("menu.dashboard"),
-  //           href: "/dashboard",
-  //           icon: <DashboardIcon />,
-  //           onClick: () => router.push("/dashboard"),
-  //         },
-  //       ]}
-  //     />
-  //   );
-  // };
-
-  function findHref(menu: Array<any>, pathname: string): any {
-    for (let item of menu) {
-      // Check if the current item has the 'href' and matches the target href
-      if (item.href === pathname) {
-        return item; // Return the object if href is found
-      }
-
-      // If 'menus' is present, perform a recursive search
-      if (item.menus) {
-        const found = findHref(item.menus, pathname);
-        if (found) {
-          return found; // Return if found in nested menus
-        }
-      }
-    }
-
-    // Return null if not found
-    return null;
-  }
 
   // render without app shell
   const isHomePage = pathname === "/";

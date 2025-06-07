@@ -17,11 +17,12 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 type Props = {
+  menutype: string;
   type: string;
 };
 
 const DepositSpaTable = (props: Props) => {
-  const { type } = props;
+  const { menutype, type } = props;
 
   const router = useRouter();
   const [pagination, setPagination] = useState<Partial<Pagination>>({
@@ -30,7 +31,7 @@ const DepositSpaTable = (props: Props) => {
   });
 
   const { data, isLoading, isError } = useDepositPendingSpaQuery({
-    menutype: type,
+    menutype,
     ...pagination,
   });
 
