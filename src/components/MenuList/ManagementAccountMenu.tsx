@@ -13,7 +13,7 @@ import { useAppShellContext } from "@/views/AppShell/AppShellContext";
 
 const ManagementAccountMenu = () => {
   const router = useRouter();
-  const { setAppBarTitle } = useAppShellContext();
+  const { pathname, setAppBarTitle } = useAppShellContext();
 
   const [items, setItems] = useState([
     {
@@ -90,6 +90,7 @@ const ManagementAccountMenu = () => {
               <ListItemButton
                 onClick={() => handleClick(subItem)}
                 sx={{ pl: newLevel * 2 }}
+                selected={pathname === subItem.href}
               >
                 <ListItemText primary={subItem.title} />
                 {subItem.items ? (

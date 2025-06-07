@@ -6,6 +6,7 @@ import {
   Typography,
   TextField,
   Box,
+  Button,
 } from "@mui/material";
 import { convertKeyToSpaceSeparated } from "@/utils/strings";
 import { useTranslations } from "next-intl";
@@ -13,6 +14,8 @@ import { cleanObject, cleanObjectKeys, removePrefix } from "@/utils/objects";
 import _ from "lodash";
 import { FileUpload, Image } from "@/components";
 import Video from "./Video";
+import { Download as DownloadIcon } from "@mui/icons-material";
+import { downloadFile } from "@/utils/download";
 
 export type DetailCardData = Record<
   string,
@@ -74,6 +77,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
 
     const field = fields[key];
 
+    // EDIT MODE
     if (editMode && field && field.type === "image") {
       return (
         <Box display="flex" flexDirection="column" gap={1}>
@@ -82,7 +86,7 @@ const DetailCard: React.FC<DetailCardProps> = ({
             label="Upload Image"
             onUpload={field.onUpload}
           />
-          <Image src={formik.values[key]} alt="Selfie" />
+          <Image src={value} alt="Selfie" />
         </Box>
       );
     }
@@ -112,6 +116,25 @@ const DetailCard: React.FC<DetailCardProps> = ({
       );
     }
 
+    if (field && field.type === "image") {
+      return (
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Button
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            onClick={() => {
+              const url = formik.values[key]; // this could be a blob or remote URL
+              downloadFile(url, key); // change filename as needed
+            }}
+          >
+            Download
+          </Button>
+          <Image src={value} alt={key} />
+        </Box>
+      );
+    }
+
+    // NOT EDIT MODE
     return value;
   };
 

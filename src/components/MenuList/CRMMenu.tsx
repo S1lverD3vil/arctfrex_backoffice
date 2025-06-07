@@ -13,7 +13,7 @@ import { useAppShellContext } from "@/views/AppShell/AppShellContext";
 
 const CRMMenu = () => {
   const router = useRouter();
-  const { setAppBarTitle } = useAppShellContext();
+  const { pathname, setAppBarTitle } = useAppShellContext();
 
   const [items, setItems] = useState([
     {
@@ -56,6 +56,7 @@ const CRMMenu = () => {
               <ListItemButton
                 onClick={() => handleClick(subItem)}
                 sx={{ pl: newLevel * 2 }}
+                selected={pathname === subItem.href}
               >
                 <ListItemText primary={subItem.title} />
                 {subItem.items ? (

@@ -72,6 +72,7 @@ const CustomerProfile = (props: CustomerProfileProps) => {
         formData.append("userId", userId);
         doStorageUpload(formData);
       },
+      onDownload: () => {},
     },
     npwp_photo: {
       type: "image",
@@ -122,16 +123,16 @@ const CustomerProfile = (props: CustomerProfileProps) => {
 
     return {
       ...cleanObject(profile),
-      ktp_photo: <Image src={profile?.ktp_photo} alt="Ktp Photo" />,
-      selfie_photo: <Image src={profile?.selfie_photo} alt="Selfie" />,
-      npwp_photo: <Image src={profile?.npwp_photo} alt="NPWP" />,
-      additional_document_photo: (
-        <Image
-          src={profile?.additional_document_photo}
-          alt="Additional Document"
-        />
-      ),
-      declaration_video: <Video src={profile?.declaration_video} />,
+      // ktp_photo: <Image src={profile?.ktp_photo} alt="Ktp Photo" />,
+      // selfie_photo: <Image src={profile?.selfie_photo} alt="Selfie" />,
+      // npwp_photo: <Image src={profile?.npwp_photo} alt="NPWP" />,
+      // additional_document_photo: (
+      //   <Image
+      //     src={profile?.additional_document_photo}
+      //     alt="Additional Document"
+      //   />
+      // ),
+      // declaration_video: <Video src={profile?.declaration_video} />,
     };
   }, [profile]);
 

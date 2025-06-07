@@ -13,7 +13,7 @@ import { useAppShellContext } from "@/views/AppShell/AppShellContext";
 
 const APUPPTMenu = () => {
   const router = useRouter();
-  const { setAppBarTitle } = useAppShellContext();
+  const { pathname, setAppBarTitle } = useAppShellContext();
 
   const [items, setItems] = useState([
     {
@@ -94,6 +94,7 @@ const APUPPTMenu = () => {
               <ListItemButton
                 onClick={() => handleClick(subItem)}
                 sx={{ pl: newLevel * 2 }}
+                selected={pathname === subItem.href}
               >
                 <ListItemText primary={subItem.title} />
                 {subItem.items ? (

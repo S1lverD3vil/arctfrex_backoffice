@@ -53,7 +53,7 @@ const DepositSpaTable = (props: Props) => {
   ];
 
   const handleRowClick = (row: Deposit) => {
-    router.push("/transactions/deposit/" + row.deposit_id);
+    router.push(`/spa/${type}/request-deposit/${row.deposit_id}`);
   };
 
   const RenderTable = () => {

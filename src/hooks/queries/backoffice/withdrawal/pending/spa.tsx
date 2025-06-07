@@ -23,7 +23,7 @@ export interface Withdrawal {
   created_at: Date;
   bank_name: string;
   meta_login_id: number;
-  finance_by: string;
+  settlement_by: string;
 }
 
 export interface Pagination {

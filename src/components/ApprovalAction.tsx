@@ -26,7 +26,7 @@ const ApprovalAction = (props: ApprovalActionProps) => {
       <Button
         color="success"
         onClick={handleApprove}
-        sx={{ width: "100px" }}
+        sx={{ minWidth: "100px" }}
         disabled={isDisabled}
         size="small"
         variant="contained"
@@ -40,7 +40,7 @@ const ApprovalAction = (props: ApprovalActionProps) => {
       <Button
         color="error"
         onClick={handleReject}
-        sx={{ width: "100px" }}
+        sx={{ minWidth: "100px" }}
         disabled={isDisabled}
         size="small"
         variant="contained"

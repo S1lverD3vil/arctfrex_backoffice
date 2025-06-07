@@ -53,7 +53,7 @@ const DepositMultiTable = (props: Props) => {
   ];
 
   const handleRowClick = (row: Deposit) => {
-    router.push("/transactions/deposit/" + row.deposit_id);
+    router.push(`/multi/${type}/request-deposit/${row.deposit_id}`);
   };
 
   const RenderTable = () => {
