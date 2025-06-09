@@ -1,79 +1,47 @@
 "use client";
 
 import { useState } from "react";
-import { useDepositPendingApproval } from "@/hooks/queries/backoffice/deposit/pending/approval";
-import { useAppContext } from "@/contexts/AppContext/AppContext";
 import { useRouter } from "next/navigation";
 import { queryClient } from "@/hooks";
 import { Box, Button, CircularProgress, Modal } from "@mui/material";
 import { useTranslations } from "next-intl";
 import { useUpdateDepositCreditTypeMutation } from "@/hooks/queries/backoffice/deposit/[depositid]/credit-type";
 import { DepositTypeSelection } from "./DepositTypeSelection";
+import { useDepositPendingDetail } from "@/hooks/queries/backoffice/deposit/pending/detail";
+import {
+  useWorkflowApproverApproveRejectMutation,
+  WorkflowDepositType,
+} from "@/hooks/queries/backoffice/workflow-approver/approve-reject";
 
 type DepositApprovalActionProps = {
   depositId: string;
   redirectTo?: string;
-  role?: "fin" | "sett";
+  showDepositType?: boolean;
   actions?: Array<"approve" | "reject" | "creditIn">;
+  role?: "fin" | "sett";
+  level?: number;
 };
 
 export const DepositApprovalAction = ({
   depositId,
   redirectTo,
-  role,
+  showDepositType = false,
   actions = [],
+  role,
+  level,
 }: DepositApprovalActionProps) => {
-  const { userSession } = useAppContext();
-
+  const router = useRouter();
   const [actionType, setActionType] = useState<
     "approve" | "reject" | "creditIn" | null
   >(null);
   const [isModalOpen, setModalOpen] = useState(false);
-
-  const [depositType, setDepositType] = useState<number>(2);
+  const [depositType, setDepositType] =
+    useState<WorkflowDepositType>("normal-deposit");
   const t = useTranslations("Data");
 
-  const router = useRouter();
-
-  const {
-    isPending: isApprovedPending,
-    mutate: doDepositPendingApprovalApproved,
-  } = useDepositPendingApproval({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [
-          "/backoffice/deposit/pending/spa",
-          "/backoffice/deposit/pending/multi",
-        ],
-      });
-
-      if (redirectTo) {
-        router.push(redirectTo);
-        return;
-      }
-
-      router.back();
-    },
+  const { data } = useDepositPendingDetail({
+    depositid: depositId,
   });
-
-  const { isPending: isRejectPending, mutate: doDepositPendingApprovalReject } =
-    useDepositPendingApproval({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries({
-          queryKey: [
-            "/backoffice/deposit/pending/spa",
-            "/backoffice/deposit/pending/multi",
-          ],
-        });
-
-        if (redirectTo) {
-          router.push(redirectTo);
-          return;
-        }
-
-        router.back();
-      },
-    });
 
   const {
     isPending: isUpdateDepositCreditTypePending,
@@ -97,28 +65,51 @@ export const DepositApprovalAction = ({
     },
   });
 
+  const {
+    isPending: isWorkflowApproverApproveRejectPending,
+    mutate: doWorkflowApproverApproveReject,
+  } = useWorkflowApproverApproveRejectMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [
+          "/backoffice/deposit/pending/spa",
+          "/backoffice/deposit/pending/multi",
+        ],
+      });
+
+      if (redirectTo) {
+        router.push(redirectTo);
+        return;
+      }
+
+      router.back();
+    },
+  });
+
   const isDisabled =
     !Boolean(depositId) ||
-    isApprovedPending ||
-    isRejectPending ||
+    isWorkflowApproverApproveRejectPending ||
     isUpdateDepositCreditTypePending;
 
   const handleConfirm = () => {
     if (!actionType) return;
+    if (!level) return;
 
     if (actionType === "approve") {
-      doDepositPendingApprovalApproved({
-        decision: "approved",
-        depositid: String(depositId),
+      doWorkflowApproverApproveReject({
+        document_id: depositId,
+        level,
+        status: "approve",
+        workflow_type: "deposit-approver",
         deposit_type: depositType,
-        userlogin: userSession?.name,
       });
     } else if (actionType === "reject") {
-      doDepositPendingApprovalReject({
-        decision: "rejected",
-        depositid: String(depositId),
+      doWorkflowApproverApproveReject({
+        document_id: depositId,
+        level,
+        status: "reject",
+        workflow_type: "deposit-approver",
         deposit_type: depositType,
-        userlogin: userSession?.name,
       });
     } else if (actionType === "creditIn") {
       doUpdateDepositCreditType({
@@ -146,18 +137,9 @@ export const DepositApprovalAction = ({
             size="small"
             variant="contained"
             onClick={() => handleOpenModal("approve")}
-            // onClick={() => {
-
-            //   doDepositPendingApprovalApproved({
-            //     decision: "approved",
-            //     depositid: String(depositId),
-            //     deposit_type: depositType,
-            //     userlogin: userSession?.name,
-            //   });
-            // }}
             disabled={isDisabled}
           >
-            {!isApprovedPending || isRejectPending ? (
+            {!isWorkflowApproverApproveRejectPending ? (
               t("approve")
             ) : (
               <CircularProgress
@@ -177,17 +159,9 @@ export const DepositApprovalAction = ({
             size="small"
             variant="contained"
             onClick={() => handleOpenModal("reject")}
-            // onClick={() => {
-            //   doDepositPendingApprovalReject({
-            //     decision: "rejected",
-            //     depositid: String(depositId),
-            //     deposit_type: depositType,
-            //     userlogin: userSession?.name,
-            //   });
-            // }}
             disabled={isDisabled}
           >
-            {!isApprovedPending || isRejectPending ? (
+            {!isWorkflowApproverApproveRejectPending ? (
               t("reject")
             ) : (
               <CircularProgress
@@ -207,14 +181,9 @@ export const DepositApprovalAction = ({
             size="small"
             variant="contained"
             onClick={() => handleOpenModal("creditIn")}
-            // onClick={() => {
-            //   doUpdateDepositCreditType({
-            //     credit_type_locale_key: "CreditIn",
-            //   });
-            // }}
             disabled={isDisabled}
           >
-            {!isApprovedPending || isRejectPending ? (
+            {!isWorkflowApproverApproveRejectPending ? (
               t("credit_in")
             ) : (
               <CircularProgress
@@ -227,11 +196,13 @@ export const DepositApprovalAction = ({
         )}
       </Box>
 
-      <DepositTypeSelection
-        depositType={depositType}
-        setDepositType={setDepositType}
-        isDisabled={isDisabled}
-      />
+      {showDepositType && (
+        <DepositTypeSelection
+          depositType={depositType}
+          setDepositType={setDepositType}
+          isDisabled={isDisabled}
+        />
+      )}
 
       <Modal open={isModalOpen} onClose={() => setModalOpen(false)}>
         <Box

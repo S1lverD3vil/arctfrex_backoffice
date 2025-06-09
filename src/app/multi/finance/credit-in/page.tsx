@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import CreditMultiTable from "@/views/Table/CreditMultiTable";
+import CreditSpaTable from "@/views/Table/CreditSpaTable";
 
 export const metadata: Metadata = {
   title: "PaNen",
 };
 
 export default function Page() {
-  return <CreditMultiTable type="credit-in" />;
+  return <CreditSpaTable type="finance" menutype="credit-in" />;
 }

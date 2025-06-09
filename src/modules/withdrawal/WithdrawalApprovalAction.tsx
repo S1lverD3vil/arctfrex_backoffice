@@ -1,25 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { useWithdrawalPendingApproval } from "@/hooks/queries/backoffice/withdrawal/pending/approval";
 import { useAppContext } from "@/contexts/AppContext/AppContext";
 import { useRouter } from "next/navigation";
 import { queryClient } from "@/hooks";
 import { Box, Button, CircularProgress, Modal } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useWorkflowApproverApproveRejectMutation } from "@/hooks/queries/backoffice/workflow-approver/approve-reject";
 
 type WithdrawalApprovalActionProps = {
   withdrawalId: string;
   redirectTo?: string;
+  showDepositType?: boolean;
+  actions?: Array<"approve" | "reject">;
   role?: "fin" | "sett";
-  actions?: Array<"approve" | "reject" | "creditIn">;
+  level?: number;
 };
 
 export const WithdrawalApprovalAction = ({
   withdrawalId,
   redirectTo,
-  role,
   actions = [],
+  role,
+  level,
 }: WithdrawalApprovalActionProps) => {
   const { userSession } = useAppContext();
 
@@ -33,14 +36,14 @@ export const WithdrawalApprovalAction = ({
   const router = useRouter();
 
   const {
-    isPending: isApprovedPending,
-    mutate: doWithdrawalPendingApprovalApproved,
-  } = useWithdrawalPendingApproval({
+    isPending: isWorkflowApproverApproveRejectPending,
+    mutate: doWorkflowApproverApproveReject,
+  } = useWorkflowApproverApproveRejectMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [
-          "/backoffice/withdrawal/pending/spa",
-          "/backoffice/withdrawal/pending/multi",
+          "/backoffice/deposit/pending/spa",
+          "/backoffice/deposit/pending/multi",
         ],
       });
 
@@ -48,47 +51,31 @@ export const WithdrawalApprovalAction = ({
         router.push(redirectTo);
         return;
       }
-      router.back();
-    },
-  });
 
-  const {
-    isPending: isRejectPending,
-    mutate: doWithdrawalPendingApprovalReject,
-  } = useWithdrawalPendingApproval({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [
-          "/backoffice/withdrawal/pending/spa",
-          "/backoffice/withdrawal/pending/multi",
-        ],
-      });
-
-      if (redirectTo) {
-        router.push(redirectTo);
-        return;
-      }
       router.back();
     },
   });
 
   const isDisabled =
-    !Boolean(withdrawalId) || isApprovedPending || isRejectPending;
+    !Boolean(withdrawalId) || isWorkflowApproverApproveRejectPending;
 
   const handleConfirm = () => {
     if (!actionType) return;
+    if (!level) return;
 
     if (actionType === "approve") {
-      doWithdrawalPendingApprovalApproved({
-        decision: "approved",
-        withdrawalid: String(withdrawalId),
-        userlogin: userSession?.name,
+      doWorkflowApproverApproveReject({
+        document_id: withdrawalId,
+        level,
+        status: "approve",
+        workflow_type: "withdrawal-approver",
       });
     } else if (actionType === "reject") {
-      doWithdrawalPendingApprovalReject({
-        decision: "rejected",
-        withdrawalid: String(withdrawalId),
-        userlogin: userSession?.name,
+      doWorkflowApproverApproveReject({
+        document_id: withdrawalId,
+        level,
+        status: "reject",
+        workflow_type: "withdrawal-approver",
       });
     }
 
@@ -114,7 +101,7 @@ export const WithdrawalApprovalAction = ({
             onClick={() => handleOpenModal("approve")}
             disabled={isDisabled}
           >
-            {!isApprovedPending || isRejectPending ? (
+            {!isWorkflowApproverApproveRejectPending ? (
               t("approve")
             ) : (
               <CircularProgress
@@ -136,7 +123,7 @@ export const WithdrawalApprovalAction = ({
             onClick={() => handleOpenModal("reject")}
             disabled={isDisabled}
           >
-            {!isApprovedPending || isRejectPending ? (
+            {!isWorkflowApproverApproveRejectPending ? (
               t("reject")
             ) : (
               <CircularProgress

@@ -19,8 +19,9 @@ const TransationsWithdrawalDetailsPage = ({
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
       <WithdrawalApprovalAction
         withdrawalId={withdrawalid}
-        actions={["approve", "reject"]}
         redirectTo="/spa/settlement/request-withdrawal"
+        actions={["approve", "reject"]}
+        level={1}
       />
 
       <WithdrawalDetail withdrawalid={withdrawalid} />

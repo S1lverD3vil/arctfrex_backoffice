@@ -21,6 +21,7 @@ const TransationsDepositDetailsPage = ({
         depositId={depositid}
         actions={["approve", "reject"]}
         redirectTo="/spa/finance/credit-in"
+        level={1}
       />
 
       <DepositDetail depositid={depositid} />

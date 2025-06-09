@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <CreditMultiTable type="credit-out" />;
+  return <CreditMultiTable type="settlement" menutype="credit-out" />;
 }

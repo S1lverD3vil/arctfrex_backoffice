@@ -19,10 +19,7 @@ const TransationsDepositDetailsPage = ({
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
       <DepositApprovalAction
         depositId={depositid}
-        redirectTo="/spa/finance/request-deposit"
-        showDepositType
-        actions={["approve", "reject", "creditIn"]}
-        level={1}
+        redirectTo="/spa/settlement/credit-out"
       />
 
       <DepositDetail depositid={depositid} />

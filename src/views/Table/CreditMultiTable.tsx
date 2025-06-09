@@ -17,11 +17,12 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 type Props = {
+  menutype: string;
   type: string;
 };
 
 const CreditMultiTable = (props: Props) => {
-  const { type } = props;
+  const { menutype, type } = props;
 
   const router = useRouter();
   const [pagination, setPagination] = useState<Partial<Pagination>>({
@@ -30,7 +31,7 @@ const CreditMultiTable = (props: Props) => {
   });
 
   const { data, isLoading, isError } = useDepositCreditMultiQuery({
-    menutype: type,
+    menutype,
     ...pagination,
   });
 
@@ -52,6 +53,10 @@ const CreditMultiTable = (props: Props) => {
     "approval_status",
   ];
 
+  const handleRowClick = (row: Deposit) => {
+    router.push(`/multi/${type}/${menutype}/${row.deposit_id}`);
+  };
+
   const RenderTable = () => {
     if (isLoading)
       return (
@@ -71,7 +76,11 @@ const CreditMultiTable = (props: Props) => {
 
     return (
       <>
-        <Table data={tableData} columns={columnsToShow} />
+        <Table
+          data={tableData}
+          columns={columnsToShow}
+          onRowClick={handleRowClick}
+        />
 
         <MUIPagination
           page={pagination.current_page ?? 1}

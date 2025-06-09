@@ -31,7 +31,7 @@ const CreditSpaTable = (props: Props) => {
   });
 
   const { data, isLoading, isError } = useDepositCreditSpaQuery({
-    menutype: menutype,
+    menutype,
     ...pagination,
   });
 
@@ -54,7 +54,7 @@ const CreditSpaTable = (props: Props) => {
   ];
 
   const handleRowClick = (row: Deposit) => {
-    router.push(`/spa/${type}/credit-in/${row.deposit_id}`);
+    router.push(`/spa/${type}/${menutype}/${row.deposit_id}`);
   };
 
   const RenderTable = () => {

@@ -1,7 +1,8 @@
+import { WorkflowDepositType } from "@/hooks/queries/backoffice/workflow-approver/approve-reject";
 import { Box, MenuItem, Select } from "@mui/material";
 
 type DepositTypeSelectionProps = {
-  depositType: number;
+  depositType: WorkflowDepositType;
   setDepositType: (value: DepositTypeSelectionProps["depositType"]) => void;
   isDisabled?: boolean;
 };
@@ -11,17 +12,19 @@ export const DepositTypeSelection = ({
   setDepositType,
   isDisabled,
 }: DepositTypeSelectionProps) => {
+  console.log(depositType);
+
   return (
     <Box display="flex" flexDirection="row" alignItems="center" gap={1}>
       <Select
         value={depositType}
-        onChange={(e) => setDepositType(Number(e.target.value))}
+        onChange={(e) => setDepositType(e.target.value as WorkflowDepositType)}
         size="small"
         sx={{ width: "200px" }}
         disabled={isDisabled}
       >
-        <MenuItem value={1}>Initial Margin</MenuItem>
-        <MenuItem value={2}>Normal Deposit</MenuItem>
+        <MenuItem value={"initial-margin"}>Initial Margin</MenuItem>
+        <MenuItem value={"normal-deposit"}>Normal Deposit</MenuItem>
       </Select>
     </Box>
   );
