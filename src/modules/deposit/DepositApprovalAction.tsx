@@ -39,10 +39,6 @@ export const DepositApprovalAction = ({
     useState<WorkflowDepositType>("normal-deposit");
   const t = useTranslations("Data");
 
-  const { data } = useDepositPendingDetail({
-    depositid: depositId,
-  });
-
   const {
     isPending: isUpdateDepositCreditTypePending,
     mutate: doUpdateDepositCreditType,

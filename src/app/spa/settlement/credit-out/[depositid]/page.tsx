@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { Box } from "@mui/material";
 import { DepositApprovalAction } from "@/modules/deposit";
-import DepositDetail from "@/modules/deposit/DepositDetail";
+import CreditOutDetail from "@/modules/deposit/CreditOutDetail";
 
 export const metadata: Metadata = {
   title: "Transactions Deposit Details | PaNen",
@@ -17,12 +17,7 @@ const TransationsDepositDetailsPage = ({
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }} gap={2}>
-      <DepositApprovalAction
-        depositId={depositid}
-        redirectTo="/spa/settlement/credit-out"
-      />
-
-      <DepositDetail depositid={depositid} />
+      <CreditOutDetail menu="spa" menutype="finance" depositid={depositid} />
     </Box>
   );
 };

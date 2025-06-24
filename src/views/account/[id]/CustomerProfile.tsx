@@ -50,6 +50,7 @@ const CustomerProfile = (props: CustomerProfileProps) => {
       enqueueSnackbar(data.message, {
         variant: "success",
       });
+      await refetchProfile();
     },
     onError: () => {
       enqueueSnackbar(t("upload_error"), { variant: "error" });
@@ -122,17 +123,7 @@ const CustomerProfile = (props: CustomerProfileProps) => {
     if (!profile) return {};
 
     return {
-      ...cleanObject(profile),
-      // ktp_photo: <Image src={profile?.ktp_photo} alt="Ktp Photo" />,
-      // selfie_photo: <Image src={profile?.selfie_photo} alt="Selfie" />,
-      // npwp_photo: <Image src={profile?.npwp_photo} alt="NPWP" />,
-      // additional_document_photo: (
-      //   <Image
-      //     src={profile?.additional_document_photo}
-      //     alt="Additional Document"
-      //   />
-      // ),
-      // declaration_video: <Video src={profile?.declaration_video} />,
+      ...cleanObject(profile, ["declaration_video"]),
     };
   }, [profile]);
 

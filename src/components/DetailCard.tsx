@@ -134,6 +134,24 @@ const DetailCard: React.FC<DetailCardProps> = ({
       );
     }
 
+    if (field && field.type === "video") {
+      return (
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Button
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            onClick={() => {
+              const url = formik.values[key]; // this could be a blob or remote URL
+              downloadFile(url, key); // change filename as needed
+            }}
+          >
+            Download
+          </Button>
+          <Video src={value} />
+        </Box>
+      );
+    }
+
     // NOT EDIT MODE
     return value;
   };
