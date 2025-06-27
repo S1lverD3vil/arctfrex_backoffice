@@ -34,11 +34,13 @@ const CustomerProfile = (props: CustomerProfileProps) => {
 
   const t = useTranslations("Page.Customer.Account.Slug");
   const {
-    data: profile,
+    data,
     isLoading,
     isError,
     refetch: refetchProfile,
   } = useCustomersUsersProfile({ userId });
+
+  const profile = data?.data;
 
   const { mutateAsync: updateCustomerProfile } =
     useCustomersUsersProfileMutation({

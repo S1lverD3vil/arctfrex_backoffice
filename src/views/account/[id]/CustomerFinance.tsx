@@ -59,7 +59,7 @@ const CustomerFinance = (props: CustomerFinanceProps) => {
   const detailData = useMemo(() => {
     if (!finance) return {};
 
-    const _finance = _.omit(finance, ["bank_list"]);
+    const _finance = _.omit(finance);
 
     return {
       ...cleanObject(_finance),
