@@ -27,11 +27,13 @@ const CustomerEmployment = (props: CustomerEmploymentProps) => {
 
   const t = useTranslations("Page.Customer.Account.Slug");
   const {
-    data: employment,
+    data,
     isLoading,
     isError,
     refetch: refetchAddress,
   } = useCustomersUsersEmployment({ userId });
+
+  const employment = data?.data;
 
   const { mutateAsync: updateCustomerAddress } =
     useCustomersUsersEmploymentMutation({

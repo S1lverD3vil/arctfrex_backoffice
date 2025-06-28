@@ -12,11 +12,11 @@ const ENDPOINT = "/backoffice/customers/users/profile";
 
 export interface CustomersUsersProfileResponse {
   message: string;
-  data: Data;
+  data: Profile;
   time: string;
 }
 
-export interface Data {
+export interface Profile {
   user_id: string;
   full_name: string;
   mobile_phone: string;

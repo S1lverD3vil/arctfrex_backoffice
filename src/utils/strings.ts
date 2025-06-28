@@ -12,23 +12,3 @@ export const ensureHttps = (url: string): string => {
   }
   return url;
 };
-
-export const renderCell = (value: any) => {
-  if (typeof value === "boolean") {
-    return value ? "Yes" : "No";
-  }
-
-  if (typeof value === "string") {
-    return String(value);
-  }
-
-  if (typeof value === "function") {
-    return value();
-  }
-
-  if (typeof value === "object") {
-    return value?.value || "";
-  }
-
-  return value;
-};

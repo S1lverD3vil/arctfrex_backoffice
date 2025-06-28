@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import _ from "lodash";
+import { useTranslations } from "next-intl";
 import {
   Table as MUITable,
   TableBody,
@@ -14,10 +16,9 @@ import {
   Button,
   Switch,
   Box,
+  Chip,
 } from "@mui/material";
-import { convertKeyToSpaceSeparated, renderCell } from "@/utils/strings";
-import { useTranslations } from "next-intl";
-import _ from "lodash";
+import { convertKeyToSpaceSeparated } from "@/utils/strings";
 
 interface TableProps<T> {
   data: T[];
@@ -73,6 +74,43 @@ const Table = <T extends Record<string, any>>({
 
     e.stopPropagation();
     onDeactive(row);
+  };
+
+  const renderCell = (row: any, column: any) => {
+    const value = row[column];
+
+    if (column === "actions") {
+      return value;
+    }
+
+    if (typeof value === "boolean") {
+      return value ? "Yes" : "No";
+    }
+
+    if (typeof value === "string") {
+      if (column === "approval_status") {
+        return (
+          <Chip
+            label={value}
+            {...(value.toLowerCase() === "approved" && { color: "success" })}
+            {...(value.toLowerCase() === "rejected" && { color: "error" })}
+            {...(value.toLowerCase() === "pending" && { color: "warning" })}
+          />
+        );
+      }
+
+      return String(value);
+    }
+
+    if (typeof value === "function") {
+      return value();
+    }
+
+    if (typeof value === "object") {
+      return value?.value || "";
+    }
+
+    return value;
   };
 
   return (
@@ -136,7 +174,7 @@ const Table = <T extends Record<string, any>>({
                       key={String(column)}
                       {...(isObject && { color })}
                     >
-                      {renderCell(row[column])}
+                      {renderCell(row, column)}
                     </StyledTableCell>
                   );
                 })}

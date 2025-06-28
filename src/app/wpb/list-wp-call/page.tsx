@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import WPBListWPCallTable from "@/views/wpb/list-wp-call/WPBListWPCallTable";
+import { TableListWPCall } from "@/modules/wpb/TableListWPCall";
 
 export const metadata: Metadata = {
   title: "PaNen",
 };
 
 export default function ListWPCallPage() {
-  return <WPBListWPCallTable />;
+  return <TableListWPCall />;
 }

@@ -29,11 +29,13 @@ const CustomerFinance = (props: CustomerFinanceProps) => {
 
   const t = useTranslations("Page.Customer.Account.Slug");
   const {
-    data: finance,
+    data,
     isLoading,
     isError,
     refetch: refetchFinance,
   } = useCustomersUsersFinance({ userId });
+
+  const finance = data?.data;
 
   const { mutateAsync: updateCustomerFinance } =
     useCustomersUsersFinanceMutation({
