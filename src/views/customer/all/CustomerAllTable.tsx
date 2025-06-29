@@ -1,15 +1,30 @@
 "use client";
 
-import { Table } from "@/components";
-import { useAccountAll, Account } from "@/hooks/queries/backoffice/account/all";
-import { approvalStatusToString } from "@/models/account";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
+import { Table } from "@/components";
+import {
+  useAccountAll,
+  Account,
+  Pagination,
+} from "@/hooks/queries/backoffice/account/all";
+import { approvalStatusToString } from "@/models/account";
+import {
+  Box,
+  CircularProgress,
+  Pagination as MUIPagination,
+  Typography,
+} from "@mui/material";
 
 const CustomerAllTable = () => {
   const router = useRouter();
-  const { data, isLoading, isError } = useAccountAll();
+  const [pagination, setPagination] = useState<Partial<Pagination>>({
+    current_page: 1,
+    page_size: 10,
+  });
+  const { data, isLoading, isError } = useAccountAll({
+    ...pagination,
+  });
 
   const tableData = useMemo(() => {
     if (!data?.data) {
@@ -23,13 +38,16 @@ const CustomerAllTable = () => {
   }, [data?.data]);
 
   const columnsToShow: Array<keyof Account> = [
-    "email",
+    "no_aggreement",
     "name",
+    "user_mobile_phone",
+    "email",
+    "created_at",
     "approval_status",
   ];
 
   const handleRowClick = (row: Account) => {
-    router.push("/customer/account/" + row.userid);
+    router.push("/customer/account/" + row.user_id);
   };
 
   const renderByStatus = useMemo(() => {
@@ -50,11 +68,28 @@ const CustomerAllTable = () => {
     if (isError) return <Typography>Error loading data</Typography>;
 
     return (
-      <Table
-        data={tableData}
-        columns={columnsToShow}
-        onRowClick={handleRowClick}
-      />
+      <>
+        <Table
+          data={tableData}
+          columns={columnsToShow}
+          onRowClick={handleRowClick}
+        />
+        <MUIPagination
+          page={pagination.current_page ?? 1}
+          count={
+            data?.pagination?.total ??
+            Math.ceil(
+              (data?.pagination?.total ?? 0) / (pagination.page_size ?? 10)
+            )
+          }
+          onChange={(_, newPage) =>
+            setPagination((prev) => ({
+              ...prev,
+              current_page: newPage,
+            }))
+          }
+        />
+      </>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isError, tableData]);
@@ -63,8 +98,10 @@ const CustomerAllTable = () => {
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        gap: 3,
       }}
     >
       {renderByStatus}
